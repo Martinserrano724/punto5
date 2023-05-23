@@ -2,47 +2,53 @@ import React from "react";
 import "../style.css";
 import { Form, Button, Container, Row , Col } from "react-bootstrap";
 import ListasTareas from "./ListasTareas";
-import { useState } from "react";
-const listaLocalStorage=localStorage.getItem('tarea')||[];
-const Formulario = () => {
-  const [tarea, setTarea] = useState("");
-  const [arrayTareas, setArrayTareas] = useState([]);
+import { useState,useEffect } from "react";
 
-  const handleSubmit = () => {
+
+const Formulario = () => {
+  let tareasLS = JSON.parse(localStorage.getItem('listaTareas')) || [];
+
+  const [tarea, setTarea] = useState("");
+  const [arrayTareas, setArrayTareas] = useState(tareasLS);
+  
+
+  useEffect(()=>{
+    localStorage.setItem('listaTareas',JSON.stringify(arrayTareas));
+  },[arrayTareas])
+
+  const handleSubmit = (e) => {
     if(tarea !=''){
+      e.preventDefault();
         setArrayTareas([...arrayTareas, tarea]);
-        listaLocalStorage.push(tarea);
-        localStorage.setItem('tarea',listaLocalStorage);
+        //limpia input
         setTarea("");
     }
     
   
   };
- {
-    console.log(JSON.stringify(listaLocalStorage));
-  }
  
   const eliminarTarea = (nombreFiltrado) => {
     let tareasFiltradas = arrayTareas.filter(
       (itemTarea) => itemTarea != nombreFiltrado
     );
-    setArrayTareas(tareasFiltradas);
+    setArrayTareas(tareasFiltradas); 
   };
+  
   return (
-    <div >
-      <Container >
-        <Row className=" bg-white  justify-content-md-center mt-5 ">
-        <Col sm="12" md="6" className="bg-white ">
+   
+      <Container  className="">
+        <Row className="   justify-content-center mt-5 ">
+        <Col xs="11" sm="11" md="12" lg="10" className="bg-white m-0">
           <h3 className="text-center bg-white ">Bienvenidos</h3>
           <hr />
-          <Form className="bg-white " onSubmit={(e) => e.preventDefault}>
-            <Form.Group className="mb-3 bg-white" controlId="formBasicEmail">
+          <Form className="bg-white " onSubmit={handleSubmit}>
+            <Form.Group className="mb-3 bg-white" >
               <Form.Label className=" bg-white text-center">Ingresa Tus Tareas</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Ingrese una Tarea"
                 required
-                maxLength={400}
+                maxLength={100}
                 minLength={1}
                 className="bg-white"
                 onChange={(e) => setTarea(e.target.value)}
@@ -52,17 +58,17 @@ const Formulario = () => {
             <Button
               className="primary"
               type="submit"
-              onClick={() => handleSubmit()}
+              
             >
               Enviar
             </Button>
           </Form>
-          
-          <ListasTareas tareas={arrayTareas} eliminar={eliminarTarea}></ListasTareas>
+           <ListasTareas tareas={arrayTareas} eliminar={eliminarTarea}></ListasTareas>
+       
           </Col>
         </Row>
       </Container>
-    </div>
+    
   );
 };
 
