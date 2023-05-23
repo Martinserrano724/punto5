@@ -1,0 +1,14 @@
+*{
+    padding: 0px;
+    margin: 0px;
+    background: rgb(235,141,212);
+}
+.container{
+    margin-top: 30px;
+    border: 1px solid black;
+    width: 50%;
+    text-align: center;
+}
+.container h3 ,  .container{
+    background: white; 
+}
